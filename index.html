@@ -11,7 +11,6 @@
     
     <!-- CSS Files -->
     <link rel="stylesheet" href="src/css/style.css">
-    <link rel="stylesheet" href="src/css/ui.css">
     
     <!-- Preload kritik kaynaklar -->
     <link rel="preload" href="src/js/main.js" as="script">
@@ -100,97 +99,12 @@
         </div>
     </div>
 
-    <!-- Settings Screen -->
-    <div id="settings-screen" class="screen overlay">
-        <div class="settings-container">
-            <h2>Ayarlar</h2>
-            
-            <div class="settings-group">
-                <h3>🔊 Ses Ayarları</h3>
-                <div class="setting-item">
-                    <label for="master-volume">Ana Ses Seviyesi</label>
-                    <input type="range" id="master-volume" min="0" max="100" value="100">
-                    <span class="volume-value">100%</span>
-                </div>
-                
-                <div class="setting-item">
-                    <label for="sfx-volume">Efekt Sesleri</label>
-                    <input type="range" id="sfx-volume" min="0" max="100" value="80">
-                    <span class="volume-value">80%</span>
-                </div>
-                
-                <div class="setting-item">
-                    <label for="music-volume">Müzik</label>
-                    <input type="range" id="music-volume" min="0" max="100" value="60">
-                    <span class="volume-value">60%</span>
-                </div>
-            </div>
-            
-            <div class="settings-group">
-                <h3>🎮 Oyun Ayarları</h3>
-                <div class="setting-item">
-                    <label for="ai-difficulty">AI Zorluğu</label>
-                    <select id="ai-difficulty">
-                        <option value="easy">Kolay</option>
-                        <option value="medium" selected>Orta</option>
-                        <option value="hard">Zor</option>
-                    </select>
-                </div>
-                
-                <div class="setting-item">
-                    <label for="match-duration">Maç Süresi</label>
-                    <select id="match-duration">
-                        <option value="60">60 Saniye</option>
-                        <option value="90" selected>90 Saniye</option>
-                        <option value="120">120 Saniye</option>
-                        <option value="unlimited">Süresiz</option>
-                    </select>
-                </div>
-            </div>
-            
-            <div class="settings-buttons">
-                <button class="menu-btn primary" id="btn-save-settings">
-                    <span class="btn-icon">💾</span>
-                    <span class="btn-text">Kaydet</span>
-                </button>
-                
-                <button class="menu-btn secondary" id="btn-close-settings">
-                    <span class="btn-icon">❌</span>
-                    <span class="btn-text">Kapat</span>
-                </button>
-            </div>
-        </div>
-    </div>
 
-    <!-- Mobile Touch Controls -->
-    <div id="mobile-controls" class="mobile-only">
-        <div class="touch-controls">
-            <!-- Player 1 Controls -->
-            <div class="touch-player-controls left">
-                <button class="touch-btn move-btn" id="touch-p1-left">◀</button>
-                <button class="touch-btn jump-btn" id="touch-p1-jump">⬆</button>
-                <button class="touch-btn move-btn" id="touch-p1-right">▶</button>
-            </div>
-            
-            <!-- Player 2 Controls (if two player mode) -->
-            <div class="touch-player-controls right" id="touch-p2-controls">
-                <button class="touch-btn move-btn" id="touch-p2-left">◀</button>
-                <button class="touch-btn jump-btn" id="touch-p2-jump">⬆</button>
-                <button class="touch-btn move-btn" id="touch-p2-right">▶</button>
-            </div>
-        </div>
-    </div>
 
     <!-- JavaScript Files -->
-    <script src="src/js/utils.js"></script>
-    <script src="src/js/audio.js"></script>
-    <script src="src/js/ui.js"></script>
-    <script src="src/js/input.js"></script>
-    <script src="src/js/physics.js"></script>
-    <script src="src/js/player.js"></script>
-    <script src="src/js/ball.js"></script>
-    <script src="src/js/ai.js"></script>
     <script src="src/js/game.js"></script>
+    <script src="src/js/player.js"></script>
+    <script src="src/js/ui.js"></script>
     <script src="src/js/main.js"></script>
 </body>
 </html> 

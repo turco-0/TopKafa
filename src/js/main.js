@@ -83,34 +83,25 @@ class TopKafaGame {
     handleKeyDown(event) {
         if (this.gameState !== 'playing') return;
 
-        // Basic movement for testing
-        switch (event.key) {
-            case 'a':
-            case 'A':
-                console.log('Player 1 left');
-                break;
-            case 'd':
-            case 'D':
-                console.log('Player 1 right');
-                break;
-            case 'w':
-            case 'W':
-                console.log('Player 1 jump');
-                break;
-            case 'ArrowLeft':
-                console.log('Player 2 left');
-                break;
-            case 'ArrowRight':
-                console.log('Player 2 right');
-                break;
-            case 'ArrowUp':
-                console.log('Player 2 jump');
-                break;
+        // Forward input to players
+        if (this.player1) {
+            this.player1.handleKeyDown(event.key);
+        }
+        if (this.player2) {
+            this.player2.handleKeyDown(event.key);
         }
     }
 
     handleKeyUp(event) {
-        // Handle key release
+        if (this.gameState !== 'playing') return;
+
+        // Forward input to players
+        if (this.player1) {
+            this.player1.handleKeyUp(event.key);
+        }
+        if (this.player2) {
+            this.player2.handleKeyUp(event.key);
+        }
     }
 
     startGameLoop() {
@@ -146,8 +137,18 @@ class TopKafaGame {
                 window.uiManager.updateTimer(this.timeRemaining);
             }
 
-            // Update game objects (players, ball, etc.)
-            // Will be implemented when we have player and ball classes
+            // Update game objects
+            if (this.player1) {
+                this.player1.update(deltaTime);
+            }
+            if (this.player2) {
+                this.player2.update(deltaTime);
+            }
+            
+            // Update ball when implemented
+            if (this.ball) {
+                this.ball.update(deltaTime);
+            }
         }
     }
 
@@ -175,33 +176,135 @@ class TopKafaGame {
     }
 
     renderDemo() {
-        // Draw a simple demo/preview
+        // Draw the beautiful field for menu preview
         this.drawField();
         
-        // Draw placeholder players
-        this.ctx.fillStyle = '#FF6347';
-        this.ctx.fillRect(100, 500, 40, 80); // Player 1
+        // Create temporary demo players if not exist
+        if (!this.demoPlayer1) {
+            this.demoPlayer1 = new Player(150, GAME_CONFIG.GROUND_Y - GAME_CONFIG.PLAYER_HEIGHT, true);
+            this.demoPlayer2 = new Player(this.settings.canvasWidth - 190, GAME_CONFIG.GROUND_Y - GAME_CONFIG.PLAYER_HEIGHT, false);
+            
+            // Set demo animations
+            this.demoPlayer1.setAnimationState('idle');
+            this.demoPlayer2.setAnimationState('idle');
+        }
         
-        this.ctx.fillStyle = '#4169E1';
-        this.ctx.fillRect(1060, 500, 40, 80); // Player 2
+        // Update demo animations
+        this.demoPlayer1.animationTime += 0.016; // ~60 FPS
+        this.demoPlayer2.animationTime += 0.016;
         
-        // Draw ball
-        this.ctx.fillStyle = '#FFD700';
+        // Occasionally change demo animations
+        if (Math.random() < 0.01) {
+            const states = ['idle', 'running', 'jumping'];
+            this.demoPlayer1.setAnimationState(states[Math.floor(Math.random() * states.length)]);
+            this.demoPlayer2.setAnimationState(states[Math.floor(Math.random() * states.length)]);
+        }
+        
+        // Draw demo players
+        this.demoPlayer1.render(this.ctx);
+        this.demoPlayer2.render(this.ctx);
+        
+        // Draw animated ball
+        const ballX = this.canvas.width / 2 + Math.sin(Date.now() * 0.001) * 50;
+        const ballY = GAME_CONFIG.GROUND_Y - 15 + Math.abs(Math.sin(Date.now() * 0.003)) * 30;
+        
+        // Ball shadow
+        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
         this.ctx.beginPath();
-        this.ctx.arc(600, 540, 20, 0, Math.PI * 2);
+        this.ctx.ellipse(ballX + 5, GAME_CONFIG.GROUND_Y + 5, 15, 8, 0, 0, Math.PI * 2);
         this.ctx.fill();
+        
+        // Ball
+        this.ctx.fillStyle = '#FFD700';
+        this.ctx.strokeStyle = '#FFA500';
+        this.ctx.lineWidth = 2;
+        this.ctx.beginPath();
+        this.ctx.arc(ballX, ballY, 15, 0, Math.PI * 2);
+        this.ctx.fill();
+        this.ctx.stroke();
+        
+        // Ball pattern
+        this.ctx.strokeStyle = '#FF8C00';
+        this.ctx.lineWidth = 1;
+        this.ctx.beginPath();
+        this.ctx.arc(ballX, ballY, 10, 0, Math.PI * 2);
+        this.ctx.stroke();
     }
 
     drawField() {
-        // Field background
-        this.ctx.fillStyle = '#228B22';
+        // Sky gradient background
+        const gradient = this.ctx.createLinearGradient(0, 0, 0, this.canvas.height);
+        gradient.addColorStop(0, '#87CEEB'); // Sky blue
+        gradient.addColorStop(0.6, '#98FB98'); // Pale green
+        gradient.addColorStop(1, '#228B22'); // Forest green
+        
+        this.ctx.fillStyle = gradient;
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
         
-        // Field lines
+        // Field grass texture
+        this.drawGrassTexture();
+        
+        // Stadium atmosphere
+        this.drawStadiumBackground();
+        
+        // Field markings
+        this.drawFieldMarkings();
+        
+        // Goals
+        this.drawGoals();
+        
+        // Corner flags
+        this.drawCornerFlags();
+    }
+
+    drawGrassTexture() {
+        // Create grass pattern with alternating stripes
+        const stripeWidth = 40;
+        for (let x = 50; x < this.canvas.width - 50; x += stripeWidth) {
+            const isEven = Math.floor((x - 50) / stripeWidth) % 2 === 0;
+            this.ctx.fillStyle = isEven ? '#32CD32' : '#228B22';
+            this.ctx.fillRect(x, 50, stripeWidth, this.canvas.height - 100);
+        }
+        
+        // Add some grass texture noise
+        this.ctx.fillStyle = 'rgba(34, 139, 34, 0.1)';
+        for (let i = 0; i < 100; i++) {
+            const x = Math.random() * (this.canvas.width - 100) + 50;
+            const y = Math.random() * (this.canvas.height - 100) + 50;
+            this.ctx.fillRect(x, y, 2, 1);
+        }
+    }
+
+    drawStadiumBackground() {
+        // Stadium walls/stands
+        this.ctx.fillStyle = '#696969'; // Dark gray
+        this.ctx.fillRect(0, 0, this.canvas.width, 50); // Top wall
+        this.ctx.fillRect(0, this.canvas.height - 50, this.canvas.width, 50); // Bottom wall
+        this.ctx.fillRect(0, 0, 50, this.canvas.height); // Left wall
+        this.ctx.fillRect(this.canvas.width - 50, 0, 50, this.canvas.height); // Right wall
+        
+        // Stadium crowd suggestion (small rectangles)
+        this.ctx.fillStyle = '#4169E1';
+        for (let x = 60; x < this.canvas.width - 60; x += 20) {
+            this.ctx.fillRect(x, 10, 8, 15);
+            this.ctx.fillRect(x, this.canvas.height - 25, 8, 15);
+        }
+        
+        // Floodlights
+        this.ctx.fillStyle = '#FFD700';
+        this.ctx.fillRect(100, 5, 20, 10);
+        this.ctx.fillRect(300, 5, 20, 10);
+        this.ctx.fillRect(500, 5, 20, 10);
+        this.ctx.fillRect(700, 5, 20, 10);
+        this.ctx.fillRect(900, 5, 20, 10);
+        this.ctx.fillRect(1100, 5, 20, 10);
+    }
+
+    drawFieldMarkings() {
         this.ctx.strokeStyle = '#FFFFFF';
         this.ctx.lineWidth = 4;
         
-        // Border
+        // Main field border
         this.ctx.strokeRect(50, 50, this.canvas.width - 100, this.canvas.height - 100);
         
         // Center line
@@ -215,33 +318,148 @@ class TopKafaGame {
         this.ctx.arc(this.canvas.width / 2, this.canvas.height / 2, 80, 0, Math.PI * 2);
         this.ctx.stroke();
         
-        // Ground line
-        this.ctx.strokeStyle = '#32CD32';
-        this.ctx.lineWidth = 2;
+        // Center spot
+        this.ctx.fillStyle = '#FFFFFF';
         this.ctx.beginPath();
-        this.ctx.moveTo(50, this.canvas.height - 100);
-        this.ctx.lineTo(this.canvas.width - 50, this.canvas.height - 100);
-        this.ctx.stroke();
+        this.ctx.arc(this.canvas.width / 2, this.canvas.height / 2, 4, 0, Math.PI * 2);
+        this.ctx.fill();
+        
+        // Penalty areas
+        const penaltyWidth = 120;
+        const penaltyHeight = 200;
+        const goalLineY1 = this.canvas.height / 2 - penaltyHeight / 2;
+        const goalLineY2 = this.canvas.height / 2 + penaltyHeight / 2;
+        
+        // Left penalty area
+        this.ctx.strokeRect(50, goalLineY1, penaltyWidth, penaltyHeight);
+        // Left penalty spot
+        this.ctx.fillStyle = '#FFFFFF';
+        this.ctx.beginPath();
+        this.ctx.arc(50 + penaltyWidth * 0.6, this.canvas.height / 2, 3, 0, Math.PI * 2);
+        this.ctx.fill();
+        
+        // Right penalty area
+        this.ctx.strokeRect(this.canvas.width - 50 - penaltyWidth, goalLineY1, penaltyWidth, penaltyHeight);
+        // Right penalty spot
+        this.ctx.beginPath();
+        this.ctx.arc(this.canvas.width - 50 - penaltyWidth * 0.6, this.canvas.height / 2, 3, 0, Math.PI * 2);
+        this.ctx.fill();
+        
+        // Goal areas (smaller boxes)
+        const goalAreaWidth = 60;
+        const goalAreaHeight = 120;
+        const goalAreaY1 = this.canvas.height / 2 - goalAreaHeight / 2;
+        
+        this.ctx.strokeRect(50, goalAreaY1, goalAreaWidth, goalAreaHeight);
+        this.ctx.strokeRect(this.canvas.width - 50 - goalAreaWidth, goalAreaY1, goalAreaWidth, goalAreaHeight);
+    }
+
+    drawCornerFlags() {
+        this.ctx.strokeStyle = '#FFFF00';
+        this.ctx.lineWidth = 2;
+        this.ctx.fillStyle = '#FF0000';
+        
+        // Corner flag poles
+        const flagHeight = 30;
+        const corners = [
+            [50, 50],
+            [this.canvas.width - 50, 50],
+            [50, this.canvas.height - 50],
+            [this.canvas.width - 50, this.canvas.height - 50]
+        ];
+        
+        corners.forEach(([x, y]) => {
+            // Pole
+            this.ctx.beginPath();
+            this.ctx.moveTo(x, y);
+            this.ctx.lineTo(x, y - flagHeight);
+            this.ctx.stroke();
+            
+            // Flag
+            this.ctx.fillRect(x, y - flagHeight, 15, 10);
+        });
+        
+        // Corner arcs
+        this.ctx.strokeStyle = '#FFFFFF';
+        this.ctx.lineWidth = 2;
+        corners.forEach(([x, y]) => {
+            this.ctx.beginPath();
+            if (x === 50 && y === 50) {
+                this.ctx.arc(x, y, 10, 0, Math.PI / 2);
+            } else if (x === this.canvas.width - 50 && y === 50) {
+                this.ctx.arc(x, y, 10, Math.PI / 2, Math.PI);
+            } else if (x === 50 && y === this.canvas.height - 50) {
+                this.ctx.arc(x, y, 10, -Math.PI / 2, 0);
+            } else {
+                this.ctx.arc(x, y, 10, Math.PI, 3 * Math.PI / 2);
+            }
+            this.ctx.stroke();
+        });
     }
 
     drawGoals() {
-        this.ctx.strokeStyle = '#FFFFFF';
+        const goalWidth = 50;
+        const goalHeight = 160;
+        const goalY = this.canvas.height / 2 - goalHeight / 2;
+        
+        // Goal structure
         this.ctx.lineWidth = 6;
+        this.ctx.strokeStyle = '#FFFFFF';
         
         // Left goal
-        this.ctx.strokeRect(0, this.canvas.height / 2 - 80, 50, 160);
+        this.ctx.strokeRect(0, goalY, goalWidth, goalHeight);
+        // Left goal net effect
+        this.ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
+        this.ctx.lineWidth = 1;
+        for (let i = 10; i < goalHeight - 10; i += 15) {
+            this.ctx.beginPath();
+            this.ctx.moveTo(5, goalY + i);
+            this.ctx.lineTo(goalWidth - 5, goalY + i);
+            this.ctx.stroke();
+        }
+        for (let i = 10; i < goalWidth - 10; i += 15) {
+            this.ctx.beginPath();
+            this.ctx.moveTo(i, goalY + 5);
+            this.ctx.lineTo(i, goalY + goalHeight - 5);
+            this.ctx.stroke();
+        }
         
         // Right goal
-        this.ctx.strokeRect(this.canvas.width - 50, this.canvas.height / 2 - 80, 50, 160);
+        this.ctx.strokeStyle = '#FFFFFF';
+        this.ctx.lineWidth = 6;
+        this.ctx.strokeRect(this.canvas.width - goalWidth, goalY, goalWidth, goalHeight);
+        // Right goal net effect
+        this.ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
+        this.ctx.lineWidth = 1;
+        for (let i = 10; i < goalHeight - 10; i += 15) {
+            this.ctx.beginPath();
+            this.ctx.moveTo(this.canvas.width - goalWidth + 5, goalY + i);
+            this.ctx.lineTo(this.canvas.width - 5, goalY + i);
+            this.ctx.stroke();
+        }
+        for (let i = 10; i < goalWidth - 10; i += 15) {
+            this.ctx.beginPath();
+            this.ctx.moveTo(this.canvas.width - goalWidth + i, goalY + 5);
+            this.ctx.lineTo(this.canvas.width - goalWidth + i, goalY + goalHeight - 5);
+            this.ctx.stroke();
+        }
+        
+        // Goal posts (3D effect)
+        this.ctx.fillStyle = '#C0C0C0';
+        this.ctx.fillRect(-5, goalY - 5, 10, 10); // Left top post
+        this.ctx.fillRect(-5, goalY + goalHeight - 5, 10, 10); // Left bottom post
+        this.ctx.fillRect(this.canvas.width - 5, goalY - 5, 10, 10); // Right top post
+        this.ctx.fillRect(this.canvas.width - 5, goalY + goalHeight - 5, 10, 10); // Right bottom post
     }
 
     drawPlayers() {
-        // Placeholder - will be replaced with actual player rendering
-        this.ctx.fillStyle = '#FF6347';
-        this.ctx.fillRect(200, 450, 40, 80);
-        
-        this.ctx.fillStyle = '#4169E1';
-        this.ctx.fillRect(960, 450, 40, 80);
+        // Render actual players
+        if (this.player1) {
+            this.player1.render(this.ctx);
+        }
+        if (this.player2) {
+            this.player2.render(this.ctx);
+        }
     }
 
     drawBall() {
@@ -263,7 +481,21 @@ class TopKafaGame {
         this.score = { player1: 0, player2: 0 };
         this.timeRemaining = this.gameTime;
         
+        // Create players
+        this.initializePlayers();
+        
         console.log(`Game started in ${mode} mode`);
+    }
+
+    initializePlayers() {
+        // Player starting positions
+        const player1X = 150;
+        const player2X = this.settings.canvasWidth - 190;
+        const playerY = GAME_CONFIG.GROUND_Y - GAME_CONFIG.PLAYER_HEIGHT;
+
+        // Create players
+        this.player1 = new Player(player1X, playerY, true);
+        this.player2 = new Player(player2X, playerY, false);
     }
 
     pause() {
