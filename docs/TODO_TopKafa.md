@@ -2,8 +2,8 @@
 
 ## 📊 Progress Tracker
 **Toplam Task:** 45  
-**Tamamlanan:** 16  
-**İlerleme:** 35.5%  
+**Tamamlanan:** 26  
+**İlerleme:** 57.8%  
 
 ---
 
@@ -58,11 +58,11 @@
 ---
 
 ### ⚽ 5. Top Sistemi
-- [ ] **5.1** Ball class implementasyonu
-- [ ] **5.2** Top-karakter collision detection
-- [ ] **5.3** Top-saha collision (duvarlar, kaleler)
-- [ ] **5.4** Kafa vuruşu mekaniği
-- [ ] **5.5** Top reset sistemi (gol sonrası)
+- [x] **5.1** Ball class implementasyonu
+- [x] **5.2** Top-karakter collision detection
+- [x] **5.3** Top-saha collision (duvarlar, kaleler)
+- [x] **5.4** Kafa vuruşu mekaniği
+- [x] **5.5** Top reset sistemi (gol sonrası)
 
 **Tahmini Süre:** 2 gün  
 **Sorumlu:** Physics Programmer
@@ -82,11 +82,11 @@
 ---
 
 ### 🎯 7. Oyun Mantığı
-- [ ] **7.1** Game state manager (menu, playing, paused, gameover)
-- [ ] **7.2** Skor takip sistemi
-- [ ] **7.3** Gol detection sistemi
-- [ ] **7.4** Match timer (90 saniye)
-- [ ] **7.5** Win/lose conditions
+- [x] **7.1** Game state manager (menu, playing, paused, gameover)
+- [x] **7.2** Skor takip sistemi
+- [x] **7.3** Gol detection sistemi
+- [x] **7.4** Match timer (90 saniye)
+- [x] **7.5** Win/lose conditions
 
 **Tahmini Süre:** 2 gün  
 **Sorumlu:** Game Developer
