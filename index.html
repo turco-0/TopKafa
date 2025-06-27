@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="TopKafa - 2D Kafa Topu Oyunu. Eğlenceli ve hızlı tempolu web tabanlı futbol oyunu!">
+    <title>TopKafa - 2D Kafa Topu Oyunu</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="src/assets/favicon.ico">
+    
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="src/css/style.css">
+    <link rel="stylesheet" href="src/css/ui.css">
+    
+    <!-- Preload kritik kaynaklar -->
+    <link rel="preload" href="src/js/main.js" as="script">
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="screen active">
+        <div class="loading-container">
+            <h1>⚽ TopKafa</h1>
+            <div class="loading-spinner"></div>
+            <p>Oyun Yükleniyor...</p>
+        </div>
+    </div>
+
+    <!-- Main Menu -->
+    <div id="main-menu" class="screen">
+        <div class="menu-container">
+            <h1>⚽ TopKafa</h1>
+            <p class="subtitle">2D Kafa Topu Oyunu</p>
+            
+            <div class="menu-buttons">
+                <button class="menu-btn primary" id="btn-single-player">🤖 Tek Oyuncu</button>
+                <button class="menu-btn primary" id="btn-two-player">👥 İki Oyuncu</button>
+                <button class="menu-btn secondary" id="btn-settings">⚙️ Ayarlar</button>
+                <button class="menu-btn secondary" id="btn-about">ℹ️ Hakkında</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Game Screen -->
+    <div id="game-screen" class="screen">
+        <canvas id="game-canvas" width="1200" height="600"></canvas>
+        
+        <!-- Game UI -->
+        <div id="game-ui" class="game-overlay">
+            <div class="hud-top">
+                <div class="score-container">
+                    <div class="player-score">
+                        <span id="player1-name">Oyuncu 1</span>
+                        <span class="score" id="player1-score">0</span>
+                    </div>
+                    
+                    <div class="game-timer">
+                        <span id="game-timer">90</span>
+                        <small>saniye</small>
+                    </div>
+                    
+                    <div class="player-score">
+                        <span id="player2-name">Oyuncu 2</span>
+                        <span class="score" id="player2-score">0</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="controls-hint" id="controls-hint">
+                <p><strong>Oyuncu 1:</strong> A/D - Hareket, W - Zıpla</p>
+                <p><strong>Oyuncu 2:</strong> ←/→ - Hareket, ↑ - Zıpla</p>
+            </div>
+            
+            <button class="pause-btn" id="pause-btn">⏸️</button>
+        </div>
+    </div>
+
+    <!-- Pause Menu -->
+    <div id="pause-menu" class="screen overlay">
+        <div class="pause-container">
+            <h2>Oyun Duraklatıldı</h2>
+            <button class="menu-btn primary" id="btn-resume">▶️ Devam Et</button>
+            <button class="menu-btn secondary" id="btn-restart">🔄 Yeniden Başla</button>
+            <button class="menu-btn secondary" id="btn-main-menu">🏠 Ana Menü</button>
+        </div>
+    </div>
+
+    <!-- Game Over Screen -->
+    <div id="game-over" class="screen overlay">
+        <div class="game-over-container">
+            <h2 id="winner-text">Oyuncu 1 Kazandı!</h2>
+            <div class="winner-trophy">🏆</div>
+            
+            <div class="final-score">
+                <span id="final-score-text">3 - 1</span>
+            </div>
+            
+            <button class="menu-btn primary" id="btn-play-again">🔄 Tekrar Oyna</button>
+            <button class="menu-btn secondary" id="btn-back-to-menu">🏠 Ana Menü</button>
+        </div>
+    </div>
+
+    <!-- Settings Screen -->
+    <div id="settings-screen" class="screen overlay">
+        <div class="settings-container">
+            <h2>Ayarlar</h2>
+            
+            <div class="settings-group">
+                <h3>🔊 Ses Ayarları</h3>
+                <div class="setting-item">
+                    <label for="master-volume">Ana Ses Seviyesi</label>
+                    <input type="range" id="master-volume" min="0" max="100" value="100">
+                    <span class="volume-value">100%</span>
+                </div>
+                
+                <div class="setting-item">
+                    <label for="sfx-volume">Efekt Sesleri</label>
+                    <input type="range" id="sfx-volume" min="0" max="100" value="80">
+                    <span class="volume-value">80%</span>
+                </div>
+                
+                <div class="setting-item">
+                    <label for="music-volume">Müzik</label>
+                    <input type="range" id="music-volume" min="0" max="100" value="60">
+                    <span class="volume-value">60%</span>
+                </div>
+            </div>
+            
+            <div class="settings-group">
+                <h3>🎮 Oyun Ayarları</h3>
+                <div class="setting-item">
+                    <label for="ai-difficulty">AI Zorluğu</label>
+                    <select id="ai-difficulty">
+                        <option value="easy">Kolay</option>
+                        <option value="medium" selected>Orta</option>
+                        <option value="hard">Zor</option>
+                    </select>
+                </div>
+                
+                <div class="setting-item">
+                    <label for="match-duration">Maç Süresi</label>
+                    <select id="match-duration">
+                        <option value="60">60 Saniye</option>
+                        <option value="90" selected>90 Saniye</option>
+                        <option value="120">120 Saniye</option>
+                        <option value="unlimited">Süresiz</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="settings-buttons">
+                <button class="menu-btn primary" id="btn-save-settings">
+                    <span class="btn-icon">💾</span>
+                    <span class="btn-text">Kaydet</span>
+                </button>
+                
+                <button class="menu-btn secondary" id="btn-close-settings">
+                    <span class="btn-icon">❌</span>
+                    <span class="btn-text">Kapat</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Touch Controls -->
+    <div id="mobile-controls" class="mobile-only">
+        <div class="touch-controls">
+            <!-- Player 1 Controls -->
+            <div class="touch-player-controls left">
+                <button class="touch-btn move-btn" id="touch-p1-left">◀</button>
+                <button class="touch-btn jump-btn" id="touch-p1-jump">⬆</button>
+                <button class="touch-btn move-btn" id="touch-p1-right">▶</button>
+            </div>
+            
+            <!-- Player 2 Controls (if two player mode) -->
+            <div class="touch-player-controls right" id="touch-p2-controls">
+                <button class="touch-btn move-btn" id="touch-p2-left">◀</button>
+                <button class="touch-btn jump-btn" id="touch-p2-jump">⬆</button>
+                <button class="touch-btn move-btn" id="touch-p2-right">▶</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Files -->
+    <script src="src/js/utils.js"></script>
+    <script src="src/js/audio.js"></script>
+    <script src="src/js/ui.js"></script>
+    <script src="src/js/input.js"></script>
+    <script src="src/js/physics.js"></script>
+    <script src="src/js/player.js"></script>
+    <script src="src/js/ball.js"></script>
+    <script src="src/js/ai.js"></script>
+    <script src="src/js/game.js"></script>
+    <script src="src/js/main.js"></script>
+</body>
+</html> 
