@@ -145,9 +145,18 @@ class TopKafaGame {
                 this.player2.update(deltaTime);
             }
             
-            // Update ball when implemented
+            // Update ball
             if (this.ball) {
                 this.ball.update(deltaTime);
+                
+                // Check collisions
+                this.checkCollisions();
+                
+                // Check goals
+                const goalResult = this.ball.checkGoal();
+                if (goalResult) {
+                    this.handleGoal(goalResult);
+                }
             }
         }
     }
@@ -463,15 +472,82 @@ class TopKafaGame {
     }
 
     drawBall() {
-        // Placeholder ball
-        this.ctx.fillStyle = '#FFD700';
-        this.ctx.strokeStyle = '#FFA500';
-        this.ctx.lineWidth = 2;
+        // Render actual ball
+        if (this.ball) {
+            this.ball.render(this.ctx);
+        }
+    }
+
+    checkCollisions() {
+        if (!this.ball || !this.player1 || !this.player2) return;
+
+        // Player 1 collisions
+        const p1HeadCollision = this.ball.checkPlayerCollision(this.player1);
+        if (p1HeadCollision) {
+            console.log(`Player 1 ${p1HeadCollision} hit!`);
+        }
         
-        this.ctx.beginPath();
-        this.ctx.arc(this.canvas.width / 2, 520, 15, 0, Math.PI * 2);
-        this.ctx.fill();
-        this.ctx.stroke();
+        // Player 1 kick collision
+        if (this.player1.checkBallKick(this.ball)) {
+            console.log('Player 1 kicked the ball!');
+        }
+
+        // Player 2 collisions
+        const p2HeadCollision = this.ball.checkPlayerCollision(this.player2);
+        if (p2HeadCollision) {
+            console.log(`Player 2 ${p2HeadCollision} hit!`);
+        }
+        
+        // Player 2 kick collision
+        if (this.player2.checkBallKick(this.ball)) {
+            console.log('Player 2 kicked the ball!');
+        }
+    }
+
+    handleGoal(side) {
+        console.log(`Goal scored on ${side} side!`);
+        
+        if (side === 'left') {
+            // Player 2 scored
+            this.score.player2++;
+            if (window.uiManager) {
+                window.uiManager.updateScore(this.score.player1, this.score.player2);
+            }
+        } else if (side === 'right') {
+            // Player 1 scored
+            this.score.player1++;
+            if (window.uiManager) {
+                window.uiManager.updateScore(this.score.player1, this.score.player2);
+            }
+        }
+
+        // Check win condition
+        if (this.score.player1 >= 3 || this.score.player2 >= 3) {
+            this.endGame();
+        } else {
+            // Reset ball position
+            this.resetBallPosition();
+        }
+    }
+
+    resetBallPosition() {
+        if (this.ball) {
+            this.ball.resetPosition(
+                this.settings.canvasWidth / 2,
+                GAME_CONFIG.GROUND_Y - GAME_CONFIG.BALL_RADIUS * 3
+            );
+        }
+        
+        // Reset player positions
+        if (this.player1) {
+            this.player1.resetPosition(150, GAME_CONFIG.GROUND_Y - GAME_CONFIG.PLAYER_HEIGHT);
+        }
+        if (this.player2) {
+            this.player2.resetPosition(
+                this.settings.canvasWidth - 190, 
+                GAME_CONFIG.GROUND_Y - GAME_CONFIG.PLAYER_HEIGHT
+            );
+        }
     }
 
     // Game flow methods
@@ -496,6 +572,12 @@ class TopKafaGame {
         // Create players
         this.player1 = new Player(player1X, playerY, true);
         this.player2 = new Player(player2X, playerY, false);
+        
+        // Create ball in center
+        this.ball = new Ball(
+            this.settings.canvasWidth / 2,
+            GAME_CONFIG.GROUND_Y - GAME_CONFIG.BALL_RADIUS * 3
+        );
     }
 
     pause() {
