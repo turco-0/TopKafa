@@ -2,17 +2,17 @@
 
 ## 📊 Progress Tracker
 **Toplam Task:** 45  
-**Tamamlanan:** 0  
-**İlerleme:** 0%  
+**Tamamlanan:** 11  
+**İlerleme:** 24.4%  
 
 ---
 
 ## 🚀 FAZ 1: MVP (Minimum Viable Product) - ÖNCELİK: YÜKSEK
 
 ### 🏗️ 1. Proje Altyapısı
-- [ ] **1.1** HTML5 Canvas temel yapısı oluştur
-- [ ] **1.2** JavaScript oyun motoru iskeletini kur
-- [ ] **1.3** CSS grid sistemi ve responsive tasarım
+- [x] **1.1** HTML5 Canvas temel yapısı oluştur
+- [x] **1.2** JavaScript oyun motoru iskeletini kur
+- [x] **1.3** CSS grid sistemi ve responsive tasarım
 - [ ] **1.4** Asset yönetim sistemi (resim, ses dosyaları)
 - [ ] **1.5** Development server kurulumu (live reload)
 
@@ -22,9 +22,9 @@
 ---
 
 ### 🎮 2. Temel Oyun Motoru
-- [ ] **2.1** Game Loop implementasyonu (60 FPS)
-- [ ] **2.2** Canvas render sistemi
-- [ ] **2.3** Input handler (klavye kontrolleri)
+- [x] **2.1** Game Loop implementasyonu (60 FPS)
+- [x] **2.2** Canvas render sistemi
+- [x] **2.3** Input handler (klavye kontrolleri)
 - [ ] **2.4** Coordinate sistemi ve world space
 - [ ] **2.5** Delta time hesaplaması
 
@@ -106,11 +106,11 @@
 ---
 
 ### 🖥️ 9. Basit UI
-- [ ] **9.1** Skor göstergesi (HUD)
-- [ ] **9.2** Timer display
-- [ ] **9.3** Kontrol talimatları
-- [ ] **9.4** Basit menü sistemi
-- [ ] **9.5** Game over ekranı
+- [x] **9.1** Skor göstergesi (HUD)
+- [x] **9.2** Timer display
+- [x] **9.3** Kontrol talimatları
+- [x] **9.4** Basit menü sistemi
+- [x] **9.5** Game over ekranı
 
 **Tahmini Süre:** 2 gün  
 **Sorumlu:** UI/UX Designer
