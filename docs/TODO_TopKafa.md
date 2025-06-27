@@ -2,8 +2,8 @@
 
 ## 📊 Progress Tracker
 **Toplam Task:** 45  
-**Tamamlanan:** 11  
-**İlerleme:** 24.4%  
+**Tamamlanan:** 16  
+**İlerleme:** 35.5%  
 
 ---
 
@@ -46,11 +46,11 @@
 ---
 
 ### 👥 4. Karakter Sistemi
-- [ ] **4.1** Player class oluştur
-- [ ] **4.2** Karakter hareket mekaniği (sol/sağ)
-- [ ] **4.3** Zıplama mekaniği
-- [ ] **4.4** Karakter-zemin collision
-- [ ] **4.5** Basit karakter animasyonları
+- [x] **4.1** Player class oluştur
+- [x] **4.2** Karakter hareket mekaniği (sol/sağ)
+- [x] **4.3** Zıplama mekaniği
+- [x] **4.4** Karakter-zemin collision
+- [x] **4.5** Basit karakter animasyonları
 
 **Tahmini Süre:** 3 gün  
 **Sorumlu:** Game Developer
@@ -70,11 +70,11 @@
 ---
 
 ### 🏟️ 6. Saha ve Çevre
-- [ ] **6.1** Futbol sahası background
-- [ ] **6.2** Kale pozisyonları ve hit detection
-- [ ] **6.3** Saha sınırları (bounds)
-- [ ] **6.4** Orta çizgi ve saha işaretleri
-- [ ] **6.5** Responsive saha boyutları
+- [x] **6.1** Futbol sahası background
+- [x] **6.2** Kale pozisyonları ve hit detection
+- [x] **6.3** Saha sınırları (bounds)
+- [x] **6.4** Orta çizgi ve saha işaretleri
+- [x] **6.5** Responsive saha boyutları
 
 **Tahmini Süre:** 1 gün  
 **Sorumlu:** UI/UX Designer
