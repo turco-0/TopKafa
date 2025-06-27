@@ -4,7 +4,14 @@ TopKafa projesi için ana repository.
 
 ## 📋 Proje Hakkında
 
-Bu proje TopKafa sistemi için geliştirilmiştir.
+**TopKafa** - 2D web tabanlı kafa topu oyunu! İnternetteki popüler kafa topu oyunlarından ilham alınarak geliştirilmiş, eğlenceli ve hızlı tempolu bir futbol oyunu.
+
+### 🎮 Oyun Özellikleri
+- 2 boyutlu perspektiften oynanan arcade-style futbol
+- Basit kontroller: Hareket (A/D) + Zıplama (W/Space)
+- AI rakibe karşı veya 2 oyunculu mod
+- İlk 3 gole ulaşan kazanır
+- 90 saniyelik heyecanlı maçlar
 
 ## 🚀 Kurulum
 
@@ -13,21 +20,51 @@ git clone https://github.com/turco-0/TopKafa.git
 cd TopKafa
 ```
 
+### Hızlı Başlangıç
+1. Proje dizinini klonlayın
+2. `index.html` dosyasını tarayıcıda açın
+3. Oyunun tadını çıkarın!
+
 ## 📁 Proje Yapısı
 
 ```
 TopKafa/
-├── README.md
-├── .gitignore
-├── src/           # Kaynak kodları
-├── docs/          # Dokümantasyon
-├── tests/         # Test dosyaları
-└── scripts/       # Yardımcı scriptler
+├── README.md              # Bu dosya
+├── .gitignore            # Git ignore kuralları
+├── index.html            # Ana oyun sayfası
+├── src/                  # Kaynak kodları
+│   ├── js/              # JavaScript dosyaları
+│   │   ├── main.js      # Ana oyun mantığı
+│   │   ├── physics.js   # Fizik motoru
+│   │   ├── player.js    # Oyuncu sınıfı
+│   │   └── ai.js        # AI sistemi
+│   ├── css/             # Stil dosyaları
+│   └── assets/          # Görseller, sesler
+├── docs/                # Dokümantasyon
+│   ├── PRD_TopKafa.md   # Product Requirements
+│   ├── TODO_TopKafa.md  # Development TODO
+│   └── KURULUM.md       # Kurulum rehberi
+├── tests/               # Test dosyaları
+└── scripts/             # Yardımcı scriptler
 ```
 
 ## 🛠️ Teknolojiler
 
-- [Henüz belirlenmedi]
+### Core Technologies
+- **HTML5 Canvas** - 2D rendering
+- **JavaScript ES6+** - Oyun mantığı
+- **CSS3** - UI ve animasyonlar
+- **Web Audio API** - Ses efektleri
+
+### Development Tools
+- **Live Server** - Development server
+- **Git** - Version control
+- **Browser DevTools** - Debugging
+
+### Target Platforms
+- **Desktop:** Chrome, Firefox, Safari, Edge
+- **Mobile:** Responsive web design
+- **PWA Ready:** Progressive Web App desteği
 
 ## 📝 Katkıda Bulunma
 
